@@ -19,14 +19,12 @@ defmodule NflRushingWeb.ConnCase do
 
   using do
     quote do
-      # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import NflRushingWeb.ConnCase
 
       alias NflRushingWeb.Router.Helpers, as: Routes
 
-      # The default endpoint for testing
       @endpoint NflRushingWeb.Endpoint
     end
   end
