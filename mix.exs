@@ -29,6 +29,7 @@ defmodule NflRushing.MixProject do
 
   defp deps do
     [
+      {:credo, "~> 1.5.5", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.1.0", only: [:dev], runtime: false},
       {:ecto_sql, "~> 3.4"},
       {:jason, "~> 1.0"},
