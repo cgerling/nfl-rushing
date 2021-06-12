@@ -1,6 +1,7 @@
 defmodule NflRushing.League.Player do
   use NflRushing.Schema
 
+  alias NflRushing.League.PlayerStatistic
   alias NflRushing.League.Team
 
   @type t :: %__MODULE__{
@@ -22,6 +23,7 @@ defmodule NflRushing.League.Player do
     timestamps()
 
     belongs_to :team, Team
+    has_one :statistic, PlayerStatistic
   end
 
   @spec changeset(%__MODULE__{}, map) :: Changeset.t()
