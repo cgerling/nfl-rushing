@@ -1,0 +1,13 @@
+version: "3"
+services:
+  database:
+    image: postgres:13.3
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - nfl-rushing-data:/var/lib/postgresql/data
+
+volumes:
+  nfl-rushing-data:
