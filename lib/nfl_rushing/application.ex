@@ -1,6 +1,4 @@
 defmodule NflRushing.Application do
-  @moduledoc false
-
   use Application
 
   @spec start(Application.start_type(), term) ::
