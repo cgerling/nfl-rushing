@@ -1,7 +1,10 @@
 defmodule NflRushingWeb.Telemetry do
+  @moduledoc false
+
   use Supervisor
   import Telemetry.Metrics
 
+  @spec start_link(term) :: Supervisor.on_start()
   def start_link(arg) do
     Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
   end
@@ -9,16 +12,13 @@ defmodule NflRushingWeb.Telemetry do
   @impl true
   def init(_arg) do
     children = [
-      # Telemetry poller will execute the given period measurements
-      # every 10_000ms. Learn more here: https://hexdocs.pm/telemetry_metrics
       {:telemetry_poller, measurements: periodic_measurements(), period: 10_000}
-      # Add reporters as children of your supervision tree.
-      # {Telemetry.Metrics.ConsoleReporter, metrics: metrics()}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
   end
 
+  @spec metrics() :: list
   def metrics do
     [
       # Phoenix Metrics
@@ -45,11 +45,8 @@ defmodule NflRushingWeb.Telemetry do
     ]
   end
 
+  @spec periodic_measurements() :: list
   defp periodic_measurements do
-    [
-      # A module, function and arguments to be invoked periodically.
-      # This function must call :telemetry.execute/3 and a metric must be added above.
-      # {NflRushingWeb, :count_users, []}
-    ]
+    []
   end
 end

@@ -16,6 +16,8 @@ defmodule NflRushing.DataCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
       alias NflRushing.Repo
@@ -28,10 +30,10 @@ defmodule NflRushing.DataCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(NflRushing.Repo)
+    :ok = Sandbox.checkout(NflRushing.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(NflRushing.Repo, {:shared, self()})
+      Sandbox.mode(NflRushing.Repo, {:shared, self()})
     end
 
     :ok
@@ -45,6 +47,7 @@ defmodule NflRushing.DataCase do
       assert %{password: ["password is too short"]} = errors_on(changeset)
 
   """
+  @spec errors_on(Changeset.t()) :: %{required(atom) => [String.t() | map]}
   def errors_on(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {message, opts} ->
       Regex.replace(~r"%{(\w+)}", message, fn _, key ->

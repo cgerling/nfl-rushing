@@ -17,6 +17,7 @@ defmodule NflRushingWeb do
   and import those modules here.
   """
 
+  @spec controller() :: term
   def controller do
     quote do
       use Phoenix.Controller, namespace: NflRushingWeb
@@ -26,21 +27,21 @@ defmodule NflRushingWeb do
     end
   end
 
+  @spec view() :: term
   def view do
     quote do
       use Phoenix.View,
         root: "lib/nfl_rushing_web/templates",
         namespace: NflRushingWeb
 
-      # Import convenience functions from controllers
       import Phoenix.Controller,
         only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
 
-      # Include shared imports and aliases for views
       unquote(view_helpers())
     end
   end
 
+  @spec router() :: term
   def router do
     quote do
       use Phoenix.Router
@@ -50,6 +51,7 @@ defmodule NflRushingWeb do
     end
   end
 
+  @spec channel() :: term
   def channel do
     quote do
       use Phoenix.Channel
@@ -58,7 +60,6 @@ defmodule NflRushingWeb do
 
   defp view_helpers do
     quote do
-      # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
       import NflRushingWeb.ErrorHelpers

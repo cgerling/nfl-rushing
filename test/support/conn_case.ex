@@ -17,25 +17,25 @@ defmodule NflRushingWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
-      # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import NflRushingWeb.ConnCase
 
       alias NflRushingWeb.Router.Helpers, as: Routes
 
-      # The default endpoint for testing
       @endpoint NflRushingWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(NflRushing.Repo)
+    :ok = Sandbox.checkout(NflRushing.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(NflRushing.Repo, {:shared, self()})
+      Sandbox.mode(NflRushing.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}
