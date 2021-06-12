@@ -26,6 +26,7 @@ defmodule NflRushing.MixProject do
 
   defp deps do
     [
+      {:dialyxir, "~> 1.1.0", only: [:dev], runtime: false},
       {:ecto_sql, "~> 3.4"},
       {:jason, "~> 1.0"},
       {:phoenix, "~> 1.5.9"},
