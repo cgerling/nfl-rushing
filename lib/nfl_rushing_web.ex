@@ -17,6 +17,7 @@ defmodule NflRushingWeb do
   and import those modules here.
   """
 
+  @spec controller() :: term
   def controller do
     quote do
       use Phoenix.Controller, namespace: NflRushingWeb
@@ -26,6 +27,7 @@ defmodule NflRushingWeb do
     end
   end
 
+  @spec view() :: term
   def view do
     quote do
       use Phoenix.View,
@@ -39,6 +41,7 @@ defmodule NflRushingWeb do
     end
   end
 
+  @spec router() :: term
   def router do
     quote do
       use Phoenix.Router
@@ -48,6 +51,7 @@ defmodule NflRushingWeb do
     end
   end
 
+  @spec channel() :: term
   def channel do
     quote do
       use Phoenix.Channel

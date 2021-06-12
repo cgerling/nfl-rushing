@@ -1,7 +1,10 @@
 defmodule NflRushingWeb.Telemetry do
+  @moduledoc false
+
   use Supervisor
   import Telemetry.Metrics
 
+  @spec start_link(term) :: Supervisor.on_start()
   def start_link(arg) do
     Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
   end
@@ -15,6 +18,7 @@ defmodule NflRushingWeb.Telemetry do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
+  @spec metrics() :: list
   def metrics do
     [
       # Phoenix Metrics
@@ -41,6 +45,7 @@ defmodule NflRushingWeb.Telemetry do
     ]
   end
 
+  @spec periodic_measurements() :: list
   defp periodic_measurements do
     []
   end
