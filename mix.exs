@@ -32,6 +32,7 @@ defmodule NflRushing.MixProject do
       {:credo, "~> 1.5.5", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.1.0", only: [:dev], runtime: false},
       {:ecto_sql, "~> 3.4"},
+      {:faker, "~> 0.16", only: [:test]},
       {:jason, "~> 1.0"},
       {:phoenix, "~> 1.5.9"},
       {:phoenix_ecto, "~> 4.1"},
