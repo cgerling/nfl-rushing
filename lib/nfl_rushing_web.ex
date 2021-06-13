@@ -23,6 +23,15 @@ defmodule NflRushingWeb do
     end
   end
 
+  defp view_helpers do
+    quote do
+      import Phoenix.View
+
+      import NflRushingWeb.ErrorHelpers
+      alias NflRushingWeb.Router.Helpers, as: Routes
+    end
+  end
+
   @spec router() :: term
   def router do
     quote do
@@ -37,15 +46,6 @@ defmodule NflRushingWeb do
   def channel do
     quote do
       use Phoenix.Channel
-    end
-  end
-
-  defp view_helpers do
-    quote do
-      import Phoenix.View
-
-      import NflRushingWeb.ErrorHelpers
-      alias NflRushingWeb.Router.Helpers, as: Routes
     end
   end
 
