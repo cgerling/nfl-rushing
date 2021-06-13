@@ -4,7 +4,7 @@ defmodule NflRushing.League do
   alias NflRushing.Repo
 
   @spec list_players(map) :: list(Player.t())
-  def list_players(params \\ %{}) do
+  def list_players(%{} = params) do
     Player
     |> Query.contains(:name, params.q)
     |> Query.sort_by(:inserted_at, :desc)

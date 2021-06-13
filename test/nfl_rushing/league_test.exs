@@ -4,12 +4,14 @@ defmodule NflRushing.LeagueTest do
   alias NflRushing.League
 
   describe "list_players/1" do
+    @params %{page: 1, page_size: 10, q: nil}
+
     test "returns a subset of all existing players" do
-      players = insert_list(50, :player)
+      players = insert_list(20, :player)
 
-      fetched_players = League.list_players()
+      fetched_players = League.list_players(@params)
 
-      assert Enum.count(fetched_players) == 30
+      assert Enum.count(fetched_players) == 10
 
       assert Enum.all?(fetched_players, fn fetched_player ->
                Enum.find(players, &(&1.id == fetched_player.id))
@@ -17,9 +19,9 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a subset of all players sorted by the newest to the oldest" do
-      insert_list(50, :player)
+      insert_list(20, :player)
 
-      fetched_players = League.list_players()
+      fetched_players = League.list_players(@params)
 
       sorted_fetched_players = Enum.sort_by(fetched_players, & &1.inserted_at, :desc)
 
@@ -27,27 +29,27 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a specific subset of players" do
-      insert_list(50, :player)
+      insert_list(15, :player)
 
-      params = %{page: 2}
+      params = %{@params | page: 2}
+      fetched_players = League.list_players(params)
+
+      assert Enum.count(fetched_players) == 5
+    end
+
+    test "returns a subset of players with custom size" do
+      insert_list(20, :player)
+
+      params = %{@params | page_size: 20}
       fetched_players = League.list_players(params)
 
       assert Enum.count(fetched_players) == 20
     end
 
-    test "returns a subset of players with custom size" do
-      insert_list(50, :player)
-
-      params = %{page: 1, page_size: 50}
-      fetched_players = League.list_players(params)
-
-      assert Enum.count(fetched_players) == 50
-    end
-
     test "returns a list of players with statistic and team information" do
-      insert_list(50, :player)
+      insert_list(10, :player)
 
-      fetched_players = League.list_players()
+      fetched_players = League.list_players(@params)
 
       assert Enum.all?(fetched_players, &Ecto.assoc_loaded?(&1.team))
       assert Enum.all?(fetched_players, &Ecto.assoc_loaded?(&1.statistic))
@@ -68,7 +70,7 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns an empty list when no player exists" do
-      fetched_players = League.list_players()
+      fetched_players = League.list_players(@params)
 
       assert Enum.empty?(fetched_players)
     end
