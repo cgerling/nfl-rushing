@@ -49,6 +49,19 @@ defmodule NflRushingWeb do
     end
   end
 
+  @spec object() :: term
+  def object do
+    quote do
+      use Ecto.Schema
+
+      import Ecto.Changeset
+
+      alias Ecto.Changeset
+
+      @primary_key false
+    end
+  end
+
   @doc """
   When used, dispatch to the appropriate controller/view/etc.
   """
