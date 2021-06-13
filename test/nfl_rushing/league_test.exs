@@ -53,6 +53,20 @@ defmodule NflRushing.LeagueTest do
       assert Enum.all?(fetched_players, &Ecto.assoc_loaded?(&1.statistic))
     end
 
+    test "returns a list with players which name contains the given query" do
+      name = Faker.Person.name()
+      named_player = insert(:player, name: name)
+      _not_matching_player = insert(:player)
+
+      params = %{@params | q: name}
+      fetched_players = League.list_players(params)
+
+      assert Enum.count(fetched_players) == 1
+
+      [fetched_player] = fetched_players
+      assert fetched_player.id == named_player.id
+    end
+
     test "returns an empty list when no player exists" do
       fetched_players = League.list_players()
 

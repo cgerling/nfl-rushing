@@ -6,6 +6,7 @@ defmodule NflRushing.League do
   @spec list_players(map) :: list(Player.t())
   def list_players(params \\ %{}) do
     Player
+    |> Query.contains(:name, params.q)
     |> Query.sort_by(:inserted_at, :desc)
     |> Query.paginate(page: params.page, page_size: params.page_size)
     |> Repo.all()
