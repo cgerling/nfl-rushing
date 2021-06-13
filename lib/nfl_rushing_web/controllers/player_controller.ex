@@ -2,39 +2,18 @@ defmodule NflRushingWeb.PlayerController do
   use NflRushingWeb, :controller
 
   alias NflRushing.League
+  alias NflRushingWeb.PageObject
+
+  action_fallback(NflRushingWeb.FallbackController)
 
   @spec index(Plug.Conn.t(), map) :: Plug.Conn.t()
   def index(conn, params) do
-    players =
-      params
-      |> get_pagination_params()
-      |> League.list_players()
+    with {:ok, page_object} <- PageObject.from_params(params) do
+      players = League.list_players(page_object)
 
-    conn
-    |> put_status(:ok)
-    |> render("index.json", players: players)
-  end
-
-  defp get_pagination_params(%{"page" => page, "page_size" => page_size}) do
-    %{
-      page: String.to_integer(page),
-      page_size: String.to_integer(page_size)
-    }
-  end
-
-  defp get_pagination_params(%{"page" => page}) do
-    %{
-      page: String.to_integer(page)
-    }
-  end
-
-  defp get_pagination_params(%{"page_size" => page_size}) do
-    %{
-      page_size: String.to_integer(page_size)
-    }
-  end
-
-  defp get_pagination_params(%{}) do
-    %{}
+      conn
+      |> put_status(:ok)
+      |> render("index.json", players: players)
+    end
   end
 end
