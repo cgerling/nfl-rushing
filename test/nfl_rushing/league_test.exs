@@ -4,7 +4,7 @@ defmodule NflRushing.LeagueTest do
   alias NflRushing.League
 
   describe "list_players/0" do
-    test "returns a list of all players saved with statistic and team associations" do
+    test "returns a list of all players" do
       players = insert_list(5, :player)
 
       fetched_players = League.list_players()
@@ -19,7 +19,7 @@ defmodule NflRushing.LeagueTest do
       assert Enum.all?(fetched_players, &Ecto.assoc_loaded?(&1.statistic))
     end
 
-    test "returns an empty list when there is no player saved" do
+    test "returns an empty list when there is no players" do
       fetched_players = League.list_players()
 
       assert Enum.empty?(fetched_players)
