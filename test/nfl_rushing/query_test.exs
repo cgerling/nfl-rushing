@@ -50,4 +50,23 @@ defmodule NflRushing.QueryTest do
       assert query == inspect(queryable)
     end
   end
+
+  describe "contains/3" do
+    test "returns a queryable with a like clause for the given value" do
+      query =
+        ~s{#Ecto.Query<from t0 in NflRushing.QueryTest.TestSchema, where: like(t0.field, ^"%value%")>}
+
+      queryable = Query.contains(TestSchema, :field, "value")
+
+      assert query == inspect(queryable)
+    end
+
+    test "returns a queryable unchanged when value is nil" do
+      query = ~s{NflRushing.QueryTest.TestSchema}
+
+      queryable = Query.contains(TestSchema, :field, nil)
+
+      assert query == inspect(queryable)
+    end
+  end
 end

@@ -27,4 +27,14 @@ defmodule NflRushing.Query do
   @spec sort_by(Queryable.t(), atom, atom) :: Queryable.t()
   def sort_by(queryable, field, direction) when is_atom(field) and is_atom(direction),
     do: order_by(queryable, ^[{direction, field}])
+
+  @spec contains(Queryable.t(), atom, term) :: Queryable.t()
+  def contains(queryable, field, nil) when is_atom(field),
+    do: queryable
+
+  def contains(queryable, field, value) when is_atom(field) do
+    like_expression = "%#{value}%"
+
+    from(element in queryable, where: like(field(element, ^field), ^like_expression))
+  end
 end
