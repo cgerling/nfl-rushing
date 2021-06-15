@@ -6,7 +6,7 @@ defmodule NflRushingWeb.SortObjectTest do
   alias Ecto.Changeset
   alias NflRushingWeb.SortObject
 
-  describe "changeset/2" do
+  describe "changeset/3" do
     @valid_params %{
       sort: "field:asc"
     }
@@ -20,6 +20,16 @@ defmodule NflRushingWeb.SortObjectTest do
     test "returns a valid changeset when params are empty" do
       empty_params = %{}
       changeset = SortObject.changeset(%SortObject{}, empty_params)
+
+      assert %Changeset{valid?: true} = changeset
+    end
+
+    test "returns a valid changeset when params are empty and allowed fields are enforced" do
+      allowed_fields = [:field]
+      empty_params = %{}
+
+      changeset =
+        SortObject.changeset(%SortObject{}, empty_params, allowed_fields: allowed_fields)
 
       assert %Changeset{valid?: true} = changeset
     end
@@ -60,6 +70,20 @@ defmodule NflRushingWeb.SortObjectTest do
 
       assert changeset.errors == [
                direction: {"is invalid", [validation: :inclusion, enum: [:asc, :desc]]}
+             ]
+    end
+
+    test "returns an invalid changeset when field is not allowed" do
+      not_allowed_field_sort = "not_allowed:asc"
+      not_allowed_field_params = %{sort: not_allowed_field_sort}
+
+      changeset =
+        SortObject.changeset(%SortObject{}, not_allowed_field_params, allowed_fields: [:field])
+
+      assert %Changeset{valid?: false} = changeset
+
+      assert changeset.errors == [
+               field: {"is invalid", [validation: :inclusion, enum: ["field"]]}
              ]
     end
   end

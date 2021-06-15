@@ -18,13 +18,16 @@ defmodule NflRushingWeb.SortObject do
     field :sort, :string, virtual: true
   end
 
-  @spec changeset(%__MODULE__{}, map) :: Changeset.t()
-  def changeset(%__MODULE__{} = struct, %{} = params) do
+  @spec changeset(%__MODULE__{}, map, list) :: Changeset.t()
+  def changeset(%__MODULE__{} = struct, %{} = params, opts \\ []) do
+    allowed_fields = Keyword.get(opts, :allowed_fields, [])
+
     struct
     |> cast(params, @fields)
     |> validate_format(:sort, @sort_expression_format)
     |> put_field_and_direction()
     |> validate_inclusion(:direction, @directions)
+    |> validate_field_is_allowed(allowed_fields)
   end
 
   defp put_field_and_direction(%Changeset{valid?: true} = changeset) do
@@ -55,6 +58,32 @@ defmodule NflRushingWeb.SortObject do
   defp convert_direction("asc"), do: :asc
   defp convert_direction("desc"), do: :desc
   defp convert_direction(direction), do: direction
+
+  defp validate_field_is_allowed(%Changeset{} = changeset, []),
+    do: changeset
+
+  defp validate_field_is_allowed(%Changeset{} = changeset, allowed_fields)
+       when is_list(allowed_fields) do
+    allowed_fields_string = Enum.map(allowed_fields, &Atom.to_string/1)
+
+    changeset
+    |> validate_inclusion(:field, allowed_fields_string)
+    |> put_field_as_atom()
+  end
+
+  defp put_field_as_atom(%Changeset{valid?: true} = changeset) do
+    field = get_change(changeset, :field)
+
+    if is_binary(field) do
+      field_atom = String.to_existing_atom(field)
+
+      put_change(changeset, :field, field_atom)
+    else
+      changeset
+    end
+  end
+
+  defp put_field_as_atom(%Changeset{} = changeset), do: changeset
 
   @spec from_params(map) :: {:ok, t()} | {:error, Changeset.t()}
   def from_params(params) do
