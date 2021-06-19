@@ -53,5 +53,30 @@ defmodule NflRushingWeb.PlayerControllerTest do
       %{"data" => players} = response
       assert Enum.empty?(players)
     end
+
+    test "returns bad request when invalid query params are passed", %{conn: conn} do
+      params = %{
+        "page" => -1,
+        "page_size" => -1,
+        "q" => "%",
+        "sort" => "field:direction"
+      }
+
+      assert response =
+               conn
+               |> get(Routes.player_path(conn, :index, params))
+               |> json_response(:bad_request)
+
+      assert response == %{
+               "errors" => %{
+                 "page" => %{
+                   "page" => ["must be greater than 0"],
+                   "page_size" => ["must be greater than 0"]
+                 },
+                 "search" => %{"q" => ["can't contain unsafe characters"]},
+                 "sort" => %{"direction" => ["is invalid"], "field" => ["is invalid"]}
+               }
+             }
+    end
   end
 end
