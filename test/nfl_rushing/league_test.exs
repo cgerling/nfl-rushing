@@ -73,6 +73,18 @@ defmodule NflRushing.LeagueTest do
       assert fetched_player.id == named_player.id
     end
 
+    test "returns a list with players sorted by a given field and order" do
+      insert_list(10, :player)
+
+      sort = %{field: :name, direction: :desc}
+      params = put_in(@params.sort, sort)
+      fetched_players = League.list_players(params)
+
+      sorted_players = Enum.sort_by(fetched_players, & &1.name, :desc)
+
+      assert fetched_players == sorted_players
+    end
+
     test "returns an empty list when no player exists" do
       fetched_players = League.list_players(@params)
 
