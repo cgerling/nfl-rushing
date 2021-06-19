@@ -23,6 +23,15 @@ defmodule NflRushingWeb do
     end
   end
 
+  defp view_helpers do
+    quote do
+      import Phoenix.View
+
+      import NflRushingWeb.ErrorHelpers
+      alias NflRushingWeb.Router.Helpers, as: Routes
+    end
+  end
+
   @spec router() :: term
   def router do
     quote do
@@ -40,12 +49,16 @@ defmodule NflRushingWeb do
     end
   end
 
-  defp view_helpers do
+  @spec object() :: term
+  def object do
     quote do
-      import Phoenix.View
+      use Ecto.Schema
 
-      import NflRushingWeb.ErrorHelpers
-      alias NflRushingWeb.Router.Helpers, as: Routes
+      import Ecto.Changeset
+
+      alias Ecto.Changeset
+
+      @primary_key false
     end
   end
 

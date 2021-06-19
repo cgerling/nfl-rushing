@@ -8,6 +8,7 @@ defmodule NflRushingWeb.Router do
   scope "/api", NflRushingWeb do
     pipe_through :api
 
+    resources "/players", PlayerController, only: [:index]
     resources "/health", HealthController, only: [:index]
   end
 end
