@@ -4,7 +4,11 @@ defmodule NflRushing.LeagueTest do
   alias NflRushing.League
 
   describe "list_players/1" do
-    @params %{page: 1, page_size: 10, q: nil}
+    @params %{
+      page: %{page: 1, page_size: 10},
+      search: %{q: nil},
+      sort: %{field: nil, direction: nil}
+    }
 
     test "returns a subset of all existing players" do
       players = insert_list(20, :player)
@@ -31,7 +35,7 @@ defmodule NflRushing.LeagueTest do
     test "returns a specific subset of players" do
       insert_list(15, :player)
 
-      params = %{@params | page: 2}
+      params = put_in(@params.page.page, 2)
       fetched_players = League.list_players(params)
 
       assert Enum.count(fetched_players) == 5
@@ -40,7 +44,7 @@ defmodule NflRushing.LeagueTest do
     test "returns a subset of players with custom size" do
       insert_list(20, :player)
 
-      params = %{@params | page_size: 20}
+      params = put_in(@params.page.page_size, 20)
       fetched_players = League.list_players(params)
 
       assert Enum.count(fetched_players) == 20
@@ -60,7 +64,7 @@ defmodule NflRushing.LeagueTest do
       named_player = insert(:player, name: name)
       _not_matching_player = insert(:player)
 
-      params = %{@params | q: name}
+      params = put_in(@params.search.q, name)
       fetched_players = League.list_players(params)
 
       assert Enum.count(fetched_players) == 1
