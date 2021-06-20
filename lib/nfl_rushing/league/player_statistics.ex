@@ -16,7 +16,7 @@ defmodule NflRushing.League.PlayerStatistic do
           rushing_fumbles: integer,
           rushing_twenty_yards_each: integer,
           rushing_yards_per_game: float,
-          total_rushing_touchdows: integer,
+          total_rushing_touchdowns: integer,
           total_rushing_yards: integer,
           updated_at: NaiveDateTime.t() | nil
         }
@@ -32,7 +32,7 @@ defmodule NflRushing.League.PlayerStatistic do
     :rushing_fumbles,
     :rushing_twenty_yards_each,
     :rushing_yards_per_game,
-    :total_rushing_touchdows,
+    :total_rushing_touchdowns,
     :total_rushing_yards
   ]
   @fields @required_fields
@@ -48,7 +48,7 @@ defmodule NflRushing.League.PlayerStatistic do
     field :rushing_fumbles, :integer
     field :rushing_twenty_yards_each, :integer
     field :rushing_yards_per_game, :float
-    field :total_rushing_touchdows, :integer
+    field :total_rushing_touchdowns, :integer
     field :total_rushing_yards, :integer
 
     timestamps()
