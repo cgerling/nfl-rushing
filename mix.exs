@@ -35,6 +35,7 @@ defmodule NflRushing.MixProject do
       {:ex_machina, "~> 2.7.0", only: [:test]},
       {:faker, "~> 0.16", only: [:test]},
       {:jason, "~> 1.0"},
+      {:nimble_csv, "~> 1.1.0"},
       {:phoenix, "~> 1.5.9"},
       {:phoenix_ecto, "~> 4.1"},
       {:plug_cowboy, "~> 2.0"},
