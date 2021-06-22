@@ -16,7 +16,7 @@ defmodule NflRushing.League.PlayerStatisticTest do
       rushing_fumbles: :rand.uniform(100),
       rushing_twenty_yards_each: :rand.uniform(100),
       rushing_yards_per_game: :rand.uniform(),
-      total_rushing_touchdows: :rand.uniform(100),
+      total_rushing_touchdowns: :rand.uniform(100),
       total_rushing_yards: :rand.uniform(100)
     }
 
@@ -43,7 +43,7 @@ defmodule NflRushing.League.PlayerStatisticTest do
                rushing_fumbles: ["can't be blank"],
                rushing_twenty_yards_each: ["can't be blank"],
                rushing_yards_per_game: ["can't be blank"],
-               total_rushing_touchdows: ["can't be blank"],
+               total_rushing_touchdowns: ["can't be blank"],
                total_rushing_yards: ["can't be blank"]
              }
     end

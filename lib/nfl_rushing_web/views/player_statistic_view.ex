@@ -15,7 +15,7 @@ defmodule NflRushingWeb.PlayerStatisticView do
       rushing_fumbles: player_statistic.rushing_fumbles,
       rushing_twenty_yards_each: player_statistic.rushing_twenty_yards_each,
       rushing_yards_per_game: player_statistic.rushing_yards_per_game,
-      total_rushing_touchdows: player_statistic.total_rushing_touchdows,
+      total_rushing_touchdowns: player_statistic.total_rushing_touchdowns,
       total_rushing_yards: player_statistic.total_rushing_yards
     }
   end

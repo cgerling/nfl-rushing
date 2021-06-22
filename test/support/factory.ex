@@ -52,7 +52,7 @@ defmodule NflRushing.Factory do
       rushing_fumbles: :rand.uniform(100),
       rushing_twenty_yards_each: :rand.uniform(100),
       rushing_yards_per_game: :rand.uniform(),
-      total_rushing_touchdows: :rand.uniform(100),
+      total_rushing_touchdowns: :rand.uniform(100),
       total_rushing_yards: :rand.uniform(100)
     }
   end
