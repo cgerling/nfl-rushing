@@ -16,7 +16,7 @@ defmodule NflRushing.League.PlayerTest do
       assert %Changeset{valid?: true} = changeset
     end
 
-    test "returns an invalid changest when required params are not present" do
+    test "returns an invalid changeset when required params are not present" do
       invalid_params = %{}
       changeset = Player.changeset(%Player{}, invalid_params)
 
