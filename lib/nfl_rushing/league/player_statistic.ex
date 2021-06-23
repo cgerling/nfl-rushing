@@ -7,7 +7,7 @@ defmodule NflRushing.League.PlayerStatistic do
           average_rushing_attempts_per_game: float,
           average_rushing_yards_per_attempt: float,
           inserted_at: NaiveDateTime.t() | nil,
-          longest_rush: integer,
+          longest_rush: String.t(),
           player: Player.t(),
           rushing_attempts: integer,
           rushing_first_downs: integer,
@@ -40,7 +40,7 @@ defmodule NflRushing.League.PlayerStatistic do
   schema "player_statistics" do
     field :average_rushing_attempts_per_game, :float
     field :average_rushing_yards_per_attempt, :float
-    field :longest_rush, :integer
+    field :longest_rush, :string
     field :rushing_attempts, :integer
     field :rushing_first_downs, :integer
     field :rushing_first_downs_percentage, :float

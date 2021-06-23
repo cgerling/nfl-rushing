@@ -41,10 +41,12 @@ defmodule NflRushing.Factory do
 
   @spec player_statistic_factory() :: PlayerStatistic.t()
   def player_statistic_factory do
+    longest_rush = 100 |> :rand.uniform() |> to_string()
+
     %PlayerStatistic{
       average_rushing_attempts_per_game: :rand.uniform(),
       average_rushing_yards_per_attempt: :rand.uniform(),
-      longest_rush: :rand.uniform(100),
+      longest_rush: longest_rush,
       rushing_attempts: :rand.uniform(100),
       rushing_first_downs: :rand.uniform(100),
       rushing_first_downs_percentage: :rand.uniform(),
