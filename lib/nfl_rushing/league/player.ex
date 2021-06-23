@@ -13,7 +13,7 @@ defmodule NflRushing.League.Player do
           updated_at: NaiveDateTime.t() | nil
         }
 
-  @required_fields [:name, :position]
+  @required_fields [:name, :position, :team_id]
   @fields @required_fields
 
   schema "players" do
