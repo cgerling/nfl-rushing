@@ -33,4 +33,11 @@ defmodule NflRushing.League.Player do
     |> validate_required(@required_fields)
     |> assoc_constraint(:team)
   end
+
+  @spec import_changeset(map) :: Changeset.t()
+  def import_changeset(%{} = params) do
+    %__MODULE__{}
+    |> changeset(params)
+    |> cast_assoc(:statistic, with: &PlayerStatistic.changeset/2)
+  end
 end
