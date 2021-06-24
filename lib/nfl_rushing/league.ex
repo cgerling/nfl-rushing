@@ -33,4 +33,11 @@ defmodule NflRushing.League do
     |> Team.changeset(params)
     |> Repo.insert()
   end
+
+  @spec import_player_with_statistic(map) :: {:ok, Player.t()} | {:error, Changeset.t()}
+  def import_player_with_statistic(%{} = params) do
+    params
+    |> Player.import_changeset()
+    |> Repo.insert()
+  end
 end
