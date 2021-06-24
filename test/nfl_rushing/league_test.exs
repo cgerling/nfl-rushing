@@ -1,7 +1,9 @@
 defmodule NflRushing.LeagueTest do
   use NflRushing.DataCase, async: true
 
+  alias Ecto.Changeset
   alias NflRushing.League
+  alias NflRushing.League.Team
 
   describe "list_players/1" do
     @params %{
@@ -218,5 +220,23 @@ defmodule NflRushing.LeagueTest do
       |> Enum.join("\r\n")
 
     "#{entries}\r\n"
+  end
+
+  describe "import_team/1" do
+    test "returns a team when params are valid" do
+      params = params_for(:team)
+
+      assert {:ok, %Team{} = team} = League.import_team(params)
+
+      fetched_team = Repo.get(Team, team.id)
+      assert team.abbreviation == fetched_team.abbreviation
+    end
+
+    test "returns an error with a changeset when required params are not present" do
+      invalid_params = %{}
+
+      assert {:error, %Changeset{} = changeset} = League.import_team(invalid_params)
+      assert errors_on(changeset) == %{abbreviation: ["can't be blank"]}
+    end
   end
 end
