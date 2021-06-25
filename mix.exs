@@ -34,6 +34,7 @@ defmodule NflRushing.MixProject do
       {:ecto_sql, "~> 3.4"},
       {:ex_machina, "~> 2.7.0", only: [:test]},
       {:faker, "~> 0.16", only: [:test]},
+      {:floki, ">= 0.30.0", only: [:test]},
       {:jason, "~> 1.0"},
       {:nimble_csv, "~> 1.1.0"},
       {:phoenix, "~> 1.5.9"},
