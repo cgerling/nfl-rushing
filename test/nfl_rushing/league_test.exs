@@ -1,7 +1,11 @@
 defmodule NflRushing.LeagueTest do
   use NflRushing.DataCase, async: true
 
+  alias Ecto.Changeset
   alias NflRushing.League
+  alias NflRushing.League.Player
+  alias NflRushing.League.PlayerStatistic
+  alias NflRushing.League.Team
 
   describe "list_players/1" do
     @params %{
@@ -218,5 +222,133 @@ defmodule NflRushing.LeagueTest do
       |> Enum.join("\r\n")
 
     "#{entries}\r\n"
+  end
+
+  describe "import_team/1" do
+    test "returns a team when params are valid" do
+      params = params_for(:team)
+
+      assert {:ok, %Team{} = team} = League.import_team(params)
+
+      fetched_team = Repo.get(Team, team.id)
+      assert team.abbreviation == fetched_team.abbreviation
+    end
+
+    test "returns an error with a changeset when required params are not present" do
+      invalid_params = %{}
+
+      assert {:error, %Changeset{} = changeset} = League.import_team(invalid_params)
+      assert errors_on(changeset) == %{abbreviation: ["can't be blank"]}
+    end
+  end
+
+  describe "import_player_with_statistic/1" do
+    test "returns a player with statistics when params are valid" do
+      team = insert(:team)
+      player_statistic = params_for(:player_statistic)
+      player = params_for(:player)
+
+      params =
+        player
+        |> Map.put(:team_id, team.id)
+        |> Map.put(:statistic, player_statistic)
+
+      assert {:ok, %Player{statistic: %PlayerStatistic{}} = player} =
+               League.import_player_with_statistic(params)
+
+      fetched_player_with_statistic =
+        Player
+        |> Repo.get(player.id)
+        |> Repo.preload(:statistic)
+
+      assert player.name == fetched_player_with_statistic.name
+      assert player.position == fetched_player_with_statistic.position
+
+      assert player.statistic.average_rushing_attempts_per_game ==
+               player_statistic.average_rushing_attempts_per_game
+
+      assert player.statistic.average_rushing_yards_per_attempt ==
+               player_statistic.average_rushing_yards_per_attempt
+
+      assert player.statistic.longest_rush == player_statistic.longest_rush
+      assert player.statistic.rushing_attempts == player_statistic.rushing_attempts
+      assert player.statistic.rushing_first_downs == player_statistic.rushing_first_downs
+
+      assert player.statistic.rushing_first_downs_percentage ==
+               player_statistic.rushing_first_downs_percentage
+
+      assert player.statistic.rushing_fourty_yards_each ==
+               player_statistic.rushing_fourty_yards_each
+
+      assert player.statistic.rushing_fumbles == player_statistic.rushing_fumbles
+
+      assert player.statistic.rushing_twenty_yards_each ==
+               player_statistic.rushing_twenty_yards_each
+
+      assert player.statistic.rushing_yards_per_game == player_statistic.rushing_yards_per_game
+
+      assert player.statistic.total_rushing_touchdowns ==
+               player_statistic.total_rushing_touchdowns
+
+      assert player.statistic.total_rushing_yards == player_statistic.total_rushing_yards
+    end
+
+    test "returns an error with a changeset when team id does not exists" do
+      team_id = Ecto.UUID.generate()
+      player_statistic = params_for(:player_statistic)
+      player = params_for(:player)
+
+      params =
+        player
+        |> Map.put(:team_id, team_id)
+        |> Map.put(:statistic, player_statistic)
+
+      assert {:error, %Changeset{} = changeset} = League.import_player_with_statistic(params)
+      assert errors_on(changeset) == %{team: ["does not exist"]}
+    end
+
+    test "returns an error with a changeset when player required params are not present" do
+      invalid_params = %{}
+
+      assert {:error, %Changeset{} = changeset} =
+               League.import_player_with_statistic(invalid_params)
+
+      assert errors_on(changeset) == %{
+               name: ["can't be blank"],
+               position: ["can't be blank"],
+               team_id: ["can't be blank"]
+             }
+    end
+
+    test "returns an error with a changeset when player statistic required params are not present" do
+      team = insert(:team)
+      invalid_player_statistic = %{}
+      player = params_for(:player)
+
+      invalid_params =
+        player
+        |> Map.put(:team_id, team.id)
+        |> Map.put(:statistic, invalid_player_statistic)
+
+      assert {:error, %Changeset{} = changeset} =
+               League.import_player_with_statistic(invalid_params)
+
+      assert errors_on(changeset) == %{
+               statistic: %{
+                 average_rushing_attempts_per_game: ["can't be blank"],
+                 average_rushing_yards_per_attempt: ["can't be blank"],
+                 longest_rush: ["can't be blank"],
+                 rushing_attempts: ["can't be blank"],
+                 rushing_first_downs: ["can't be blank"],
+                 rushing_first_downs_percentage: ["can't be blank"],
+                 rushing_fourty_yards_each: ["can't be blank"],
+                 rushing_fumbles: ["can't be blank"],
+                 rushing_twenty_yards_each: ["can't be blank"],
+                 rushing_yards_per_game: ["can't be blank"],
+                 total_rushing_touchdowns: ["can't be blank"],
+                 total_rushing_yards: ["can't be blank"]
+               }
+             }
+    end
   end
 end

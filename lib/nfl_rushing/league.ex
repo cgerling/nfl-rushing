@@ -1,6 +1,8 @@
 defmodule NflRushing.League do
+  alias Ecto.Changeset
   alias NflRushing.Exporter
   alias NflRushing.League.Player
+  alias NflRushing.League.Team
   alias NflRushing.Query
   alias NflRushing.Repo
 
@@ -23,5 +25,19 @@ defmodule NflRushing.League do
     params
     |> list_players()
     |> Exporter.export_players()
+  end
+
+  @spec import_team(map) :: {:ok, Team.t()} | {:error, Changeset.t()}
+  def import_team(%{} = params) do
+    %Team{}
+    |> Team.changeset(params)
+    |> Repo.insert()
+  end
+
+  @spec import_player_with_statistic(map) :: {:ok, Player.t()} | {:error, Changeset.t()}
+  def import_player_with_statistic(%{} = params) do
+    params
+    |> Player.import_changeset()
+    |> Repo.insert()
   end
 end

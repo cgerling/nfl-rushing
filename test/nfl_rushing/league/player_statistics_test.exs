@@ -8,7 +8,7 @@ defmodule NflRushing.League.PlayerStatisticTest do
     @valid_params %{
       average_rushing_attempts_per_game: :rand.uniform(),
       average_rushing_yards_per_attempt: :rand.uniform(),
-      longest_rush: :rand.uniform(100),
+      longest_rush: 100 |> :rand.uniform() |> to_string(),
       rushing_attempts: :rand.uniform(100),
       rushing_first_downs: :rand.uniform(100),
       rushing_first_downs_percentage: :rand.uniform(),

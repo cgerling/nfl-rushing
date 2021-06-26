@@ -13,7 +13,7 @@ defmodule NflRushing.League.Player do
           updated_at: NaiveDateTime.t() | nil
         }
 
-  @required_fields [:name, :position]
+  @required_fields [:name, :position, :team_id]
   @fields @required_fields
 
   schema "players" do
@@ -32,5 +32,12 @@ defmodule NflRushing.League.Player do
     |> cast(params, @fields)
     |> validate_required(@required_fields)
     |> assoc_constraint(:team)
+  end
+
+  @spec import_changeset(map) :: Changeset.t()
+  def import_changeset(%{} = params) do
+    %__MODULE__{}
+    |> changeset(params)
+    |> cast_assoc(:statistic, with: &PlayerStatistic.changeset/2)
   end
 end
