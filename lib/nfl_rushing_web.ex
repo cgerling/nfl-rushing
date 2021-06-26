@@ -23,8 +23,31 @@ defmodule NflRushingWeb do
     end
   end
 
+  @spec live_view() :: term
+  def live_view do
+    quote do
+      use Phoenix.LiveView,
+        layout: {NflRushingWeb.LayoutView, "live.html"}
+
+      unquote(view_helpers())
+    end
+  end
+
+  @spec live_component() :: term
+  def live_component do
+    quote do
+      use Phoenix.LiveComponent
+
+      unquote(view_helpers())
+    end
+  end
+
   defp view_helpers do
     quote do
+      use Phoenix.HTML
+
+      import Phoenix.LiveView.Helpers
+
       import Phoenix.View
 
       import NflRushingWeb.ErrorHelpers
@@ -39,6 +62,7 @@ defmodule NflRushingWeb do
 
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 

@@ -7,6 +7,8 @@ defmodule NflRushingWeb.Endpoint do
     signing_salt: "DP0vYzMP"
   ]
 
+  socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
+
   plug Plug.Static,
     at: "/",
     from: :nfl_rushing,
