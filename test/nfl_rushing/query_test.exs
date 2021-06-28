@@ -40,12 +40,24 @@ defmodule NflRushing.QueryTest do
     end
   end
 
-  describe "sort_by/3" do
+  describe "sort_by/4" do
     test "returns a queryable with a order by clause of the given field and direction" do
       query =
         ~s{#Ecto.Query<from t0 in NflRushing.QueryTest.TestSchema, order_by: [asc: t0.field]>}
 
       queryable = Query.sort_by(TestSchema, :field, :asc)
+
+      assert query == inspect(queryable)
+    end
+
+    test "returns a queryable with a order by clause of the given field and direction of an association" do
+      query =
+        ~s{#Ecto.Query<from t0 in NflRushing.QueryTest.TestSchema, join: t1 in assoc(t0, :test_association), as: :test_association, order_by: [asc: t1.field]>}
+
+      queryable =
+        TestSchema
+        |> Query.join_with(:test_association)
+        |> Query.sort_by(:field, :asc, of: :test_association)
 
       assert query == inspect(queryable)
     end

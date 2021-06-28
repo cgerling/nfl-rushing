@@ -28,8 +28,21 @@ defmodule NflRushing.Query do
   def sort_by(queryable, field, direction) when is_nil(field) or is_nil(direction),
     do: queryable
 
-  def sort_by(queryable, field, direction) when is_atom(field) and is_atom(direction),
-    do: order_by(queryable, ^[{direction, field}])
+  def sort_by(queryable, field, direction) when is_atom(field) and is_atom(direction) do
+    order_by(queryable, ^[{direction, field}])
+  end
+
+  @spec sort_by(Queryable.t(), atom, atom, Keyword.t()) :: Queryable.t()
+  def sort_by(queryable, field, direction, opts)
+      when is_atom(field) and is_atom(direction) and is_list(opts) do
+    binding = Keyword.get(opts, :of)
+
+    order_by(
+      queryable,
+      [{^binding, element}],
+      [{^direction, field(element, ^field)}]
+    )
+  end
 
   @spec contains(Queryable.t(), atom, term) :: Queryable.t()
   def contains(queryable, field, nil) when is_atom(field),
