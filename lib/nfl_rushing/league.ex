@@ -14,7 +14,8 @@ defmodule NflRushing.League do
 
     Player
     |> Query.contains(:name, search.q)
-    |> Query.sort_by(sort_field, sort_direction)
+    |> Query.join_with(:statistic)
+    |> Query.sort_by(sort_field, sort_direction, of: :statistic)
     |> Query.paginate(page: page.page, page_size: page.page_size)
     |> Repo.all()
     |> Repo.preload([:statistic, :team])
