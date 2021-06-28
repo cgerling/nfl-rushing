@@ -1,4 +1,4 @@
-<main role="main" class="container">
+<main role="main" class="bg-white mx-auto p-6">
   <p class="alert alert-info" role="alert"
     phx-click="lv:clear-flash"
     phx-value-key="info"><%= live_flash(@flash, :info) %></p>
@@ -6,6 +6,16 @@
   <p class="alert alert-danger" role="alert"
     phx-click="lv:clear-flash"
     phx-value-key="error"><%= live_flash(@flash, :error) %></p>
+
+  <div class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="lg:text-center">
+        <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          NFL Rushing Statistics
+        </p>
+      </div>
+    </div>
+  </div>
 
   <%= @inner_content %>
 </main>
