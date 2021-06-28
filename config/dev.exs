@@ -23,6 +23,15 @@ config :nfl_rushing, NflRushingWeb.Endpoint,
     ]
   ]
 
+config :nfl_rushing, NflRushingWeb.Endpoint,
+  live_reload: [
+    patterns: [
+      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"lib/nfl_rushing_web/(live|views)/.*(ex)$",
+      ~r"lib/nfl_rushing_web/templates/.*(eex)$"
+    ]
+  ]
+
 config :logger, :console, format: "[$level] $message\n"
 
 config :phoenix, :stacktrace_depth, 20

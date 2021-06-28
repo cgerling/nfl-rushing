@@ -16,6 +16,8 @@ defmodule NflRushingWeb.Endpoint do
     only: ~w(css fonts images js favicon.ico robots.txt)
 
   if code_reloading? do
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
+    plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :nfl_rushing
   end
