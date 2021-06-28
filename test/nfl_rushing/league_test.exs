@@ -77,14 +77,14 @@ defmodule NflRushing.LeagueTest do
       assert fetched_player.id == named_player.id
     end
 
-    test "returns a list with players sorted by a given field and order" do
+    test "returns a list with players sorted by a given player statistic field and order" do
       insert_list(10, :player)
 
-      sort = %{field: :name, direction: :desc}
+      sort = %{field: :id, direction: :desc}
       params = put_in(@params.sort, sort)
       fetched_players = League.list_players(params)
 
-      sorted_players = Enum.sort_by(fetched_players, & &1.name, :desc)
+      sorted_players = Enum.sort_by(fetched_players, & &1.statistic.id, :desc)
 
       assert fetched_players == sorted_players
     end
@@ -161,15 +161,15 @@ defmodule NflRushing.LeagueTest do
       assert csv == League.export_players(params)
     end
 
-    test "returns a list with players sorted by a given field and order" do
+    test "returns a list with players sorted by a given player statistic field and order" do
       players = insert_list(10, :player)
 
       csv =
         players
-        |> Enum.sort_by(& &1.name, :asc)
+        |> Enum.sort_by(& &1.statistic.id, :asc)
         |> build_csv()
 
-      sort = %{field: :name, direction: :asc}
+      sort = %{field: :id, direction: :asc}
       params = put_in(@params.sort, sort)
 
       assert csv == League.export_players(params)
