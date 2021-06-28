@@ -61,22 +61,6 @@ defmodule NflRushing.QueryTest do
 
       assert query == inspect(queryable)
     end
-
-    test "returns a queryable unchanged when field is not an atom" do
-      query = ~s{NflRushing.QueryTest.TestSchema}
-
-      queryable = Query.sort_by(TestSchema, nil, :asc)
-
-      assert query == inspect(queryable)
-    end
-
-    test "returns a queryable unchanges when direction is not an atom" do
-      query = ~s{NflRushing.QueryTest.TestSchema}
-
-      queryable = Query.sort_by(TestSchema, :field, nil)
-
-      assert query == inspect(queryable)
-    end
   end
 
   describe "contains/3" do

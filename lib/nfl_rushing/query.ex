@@ -24,10 +24,7 @@ defmodule NflRushing.Query do
     |> offset_by(offset_amount)
   end
 
-  @spec sort_by(Queryable.t(), atom | nil, atom | nil) :: Queryable.t()
-  def sort_by(queryable, field, direction) when is_nil(field) or is_nil(direction),
-    do: queryable
-
+  @spec sort_by(Queryable.t(), atom, atom | nil) :: Queryable.t()
   def sort_by(queryable, field, direction) when is_atom(field) and is_atom(direction) do
     order_by(queryable, ^[{direction, field}])
   end
