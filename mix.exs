@@ -34,10 +34,13 @@ defmodule NflRushing.MixProject do
       {:ecto_sql, "~> 3.4"},
       {:ex_machina, "~> 2.7.0", only: [:test]},
       {:faker, "~> 0.16", only: [:test]},
+      {:floki, ">= 0.30.0", only: [:test]},
       {:jason, "~> 1.0"},
       {:nimble_csv, "~> 1.1.0"},
       {:phoenix, "~> 1.5.9"},
       {:phoenix_ecto, "~> 4.1"},
+      {:phoenix_live_reload, "~> 1.2", only: [:dev]},
+      {:phoenix_live_view, "~> 0.15.7"},
       {:plug_cowboy, "~> 2.0"},
       {:postgrex, ">= 0.0.0"},
       {:sobelow, "~> 0.8", only: [:dev]},
@@ -48,7 +51,7 @@ defmodule NflRushing.MixProject do
 
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup"],
+      setup: ["deps.get", "ecto.setup", "cmd npm install --prefix assets"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
