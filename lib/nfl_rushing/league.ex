@@ -8,7 +8,10 @@ defmodule NflRushing.League do
 
   @spec list_players(map) :: %{count: integer(), entries: list(Player.t())}
   def list_players(%{} = params) do
-    %{page: page, search: search, sort: sort} = params
+    page = Map.get(params, :page, %{page: nil, page_size: nil})
+    search = Map.get(params, :search, %{q: nil})
+    sort = Map.get(params, :sort, %{})
+
     sort_field = Map.get(sort, :field)
     sort_direction = Map.get(sort, :direction)
 
