@@ -14,9 +14,12 @@ defmodule NflRushing.LeagueTest do
       sort: %{field: nil, direction: nil}
     }
 
-    test "returns a subset of all existing players" do
-      players = create_players(15)
-      fetched_players = League.list_players(@params)
+    test "returns a map with a total count and a list with a subset of all existing players" do
+      players = create_players(20)
+
+      assert %{count: count, entries: fetched_players} = League.list_players(@params)
+
+      assert count == 20
 
       assert Enum.count(fetched_players) == 10
 
@@ -25,72 +28,77 @@ defmodule NflRushing.LeagueTest do
              end)
     end
 
-    test "returns a subset of all players sorted by the newest to the oldest" do
+    test "returns a map with a total count and a list with a subset of all players sorted by the newest to the oldest" do
       create_players(20)
 
-      fetched_players = League.list_players(@params)
+      assert %{entries: fetched_players} = League.list_players(@params)
 
       sorted_fetched_players = Enum.sort_by(fetched_players, & &1.inserted_at, :desc)
 
       assert sorted_fetched_players == fetched_players
     end
 
-    test "returns a specific subset of players" do
+    test "returns a map with a total count and a list with a specific subset of players" do
       create_players(15)
 
       params = put_in(@params.page.page, 2)
-      fetched_players = League.list_players(params)
+      assert %{count: count, entries: fetched_players} = League.list_players(params)
 
+      assert count == 15
       assert Enum.count(fetched_players) == 5
     end
 
-    test "returns a subset of players with custom size" do
+    test "returns a map with a total count and a list with a subset of players with custom size" do
       create_players(20)
 
-      params = put_in(@params.page.page_size, 20)
-      fetched_players = League.list_players(params)
+      params = put_in(@params.page.page_size, 15)
+      assert %{count: count, entries: fetched_players} = League.list_players(params)
 
-      assert Enum.count(fetched_players) == 20
+      assert count == 20
+      assert Enum.count(fetched_players) == 15
     end
 
-    test "returns a list of players with statistic and team information" do
-      create_players(15)
+    test "returns a map with a total count and list of players with statistic and team information" do
+      create_players(10)
 
-      fetched_players = League.list_players(@params)
+      assert %{count: count, entries: fetched_players} = League.list_players(@params)
 
+      assert count == 10
       assert Enum.all?(fetched_players, &Ecto.assoc_loaded?(&1.team))
       assert Enum.all?(fetched_players, &Ecto.assoc_loaded?(&1.statistic))
     end
 
-    test "returns a list with players which name contains the given query" do
+    test "returns a map with a total count and a list of players which name contains the given query string" do
       create_players(15)
       name = Faker.Person.name()
       named_player = insert(:player, name: name)
 
       params = put_in(@params.search.q, name)
-      fetched_players = League.list_players(params)
+      assert %{count: count, entries: fetched_players} = League.list_players(params)
 
+      assert count == 1
       assert Enum.count(fetched_players) == 1
 
       [fetched_player] = fetched_players
       assert fetched_player.id == named_player.id
     end
 
-    test "returns a list with players sorted by a given player statistic field and order" do
+    test "returns a map with a total count and a list of players sorted by a given player statistic field and order" do
       create_players(15)
 
       sort = %{field: :id, direction: :desc}
       params = put_in(@params.sort, sort)
-      fetched_players = League.list_players(params)
+      assert %{entries: fetched_players} = League.list_players(params)
 
       sorted_players = Enum.sort_by(fetched_players, & &1.statistic.id, :desc)
 
       assert fetched_players == sorted_players
     end
 
-    test "returns an empty list when no player exists" do
-      fetched_players = League.list_players(@params)
+    test "returns a map with a total count as zero and an empty list when there is no players saved" do
+      assert %{count: count, entries: fetched_players} = League.list_players(@params)
 
+      assert count == 0
       assert Enum.empty?(fetched_players)
     end
   end
