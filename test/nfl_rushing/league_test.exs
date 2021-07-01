@@ -15,8 +15,7 @@ defmodule NflRushing.LeagueTest do
     }
 
     test "returns a subset of all existing players" do
-      players = insert_list(20, :player)
-
+      players = create_players(15)
       fetched_players = League.list_players(@params)
 
       assert Enum.count(fetched_players) == 10
@@ -27,7 +26,7 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a subset of all players sorted by the newest to the oldest" do
-      insert_list(20, :player)
+      create_players(20)
 
       fetched_players = League.list_players(@params)
 
@@ -37,7 +36,7 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a specific subset of players" do
-      insert_list(15, :player)
+      create_players(15)
 
       params = put_in(@params.page.page, 2)
       fetched_players = League.list_players(params)
@@ -46,7 +45,7 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a subset of players with custom size" do
-      insert_list(20, :player)
+      create_players(20)
 
       params = put_in(@params.page.page_size, 20)
       fetched_players = League.list_players(params)
@@ -55,7 +54,7 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a list of players with statistic and team information" do
-      insert_list(10, :player)
+      create_players(15)
 
       fetched_players = League.list_players(@params)
 
@@ -64,9 +63,9 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a list with players which name contains the given query" do
+      create_players(15)
       name = Faker.Person.name()
       named_player = insert(:player, name: name)
-      _not_matching_player = insert(:player)
 
       params = put_in(@params.search.q, name)
       fetched_players = League.list_players(params)
@@ -78,7 +77,7 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a list with players sorted by a given player statistic field and order" do
-      insert_list(10, :player)
+      create_players(15)
 
       sort = %{field: :id, direction: :desc}
       params = put_in(@params.sort, sort)
@@ -350,5 +349,13 @@ defmodule NflRushing.LeagueTest do
                }
              }
     end
+  end
+
+  defp create_players(amount) when is_integer(amount) do
+    now = NaiveDateTime.utc_now()
+
+    1..amount
+    |> Enum.map(&NaiveDateTime.add(now, -&1, :second))
+    |> Enum.map(&insert(:player, inserted_at: &1))
   end
 end
