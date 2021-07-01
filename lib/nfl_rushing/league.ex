@@ -9,13 +9,14 @@ defmodule NflRushing.League do
   @spec list_players(map) :: list(Player.t())
   def list_players(%{} = params) do
     %{page: page, search: search, sort: sort} = params
-    sort_field = Map.get(sort, :field) || :inserted_at
-    sort_direction = Map.get(sort, :direction) || :desc
+    sort_field = Map.get(sort, :field)
+    sort_direction = Map.get(sort, :direction)
 
     Player
     |> Query.contains(:name, search.q)
     |> Query.join_with(:statistic)
     |> Query.sort_by(sort_field, sort_direction, of: :statistic)
+    |> Query.sort_by(:inserted_at, :desc)
     |> Query.paginate(page: page.page, page_size: page.page_size)
     |> Repo.all()
     |> Repo.preload([:statistic, :team])
