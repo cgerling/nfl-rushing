@@ -103,30 +103,32 @@ defmodule NflRushing.LeagueTest do
     }
 
     test "returns a subset of all existing players" do
-      players = insert_list(5, :player)
+      players = create_players(15)
 
-      csv = build_csv(players)
+      csv =
+        players
+        |> Enum.take(10)
+        |> build_csv()
 
       assert csv == League.export_players(@params)
     end
 
     test "returns a subset of all players sorted by the newest to the oldest" do
-      players = insert_list(5, :player)
+      players = create_players(15)
 
       csv =
         players
-        |> Enum.sort_by(& &1.inserted_at, :desc)
+        |> Enum.take(10)
         |> build_csv()
 
       assert csv == League.export_players(@params)
     end
 
     test "returns a specific subset of players" do
-      players = insert_list(20, :player)
+      players = create_players(15)
 
       csv =
         players
-        |> Enum.sort_by(& &1.inserted_at, :desc)
         |> Enum.drop(10)
         |> build_csv()
 
@@ -136,12 +138,9 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a subset of players with custom size" do
-      players = insert_list(20, :player)
+      players = create_players(15)
 
-      csv =
-        players
-        |> Enum.sort_by(& &1.inserted_at, :desc)
-        |> build_csv()
+      csv = build_csv(players)
 
       params = put_in(@params.page.page_size, 20)
 
@@ -149,9 +148,10 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a list with players which name contains the given query" do
+      create_players(15)
+
       name = Faker.Person.name()
       named_player = insert(:player, name: name)
-      _not_matching_player = insert(:player)
 
       csv = build_csv([named_player])
 
@@ -161,11 +161,12 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a list with players sorted by a given player statistic field and order" do
-      players = insert_list(10, :player)
+      players = create_players(15)
 
       csv =
         players
         |> Enum.sort_by(& &1.statistic.id, :asc)
+        |> Enum.take(10)
         |> build_csv()
 
       sort = %{field: :id, direction: :asc}
