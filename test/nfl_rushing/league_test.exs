@@ -38,6 +38,17 @@ defmodule NflRushing.LeagueTest do
       assert sorted_fetched_players == fetched_players
     end
 
+    test "returns a map with a total count and a list with a subset of all players sorted by the newest to the oldest and id" do
+      now = NaiveDateTime.utc_now()
+      players = insert_list(5, :player, inserted_at: now)
+
+      assert %{entries: fetched_players} = League.list_players(@params)
+
+      sorted_players = Enum.sort_by(players, & &1.id, :asc)
+
+      assert sorted_players == fetched_players
+    end
+
     test "returns a map with a total count and a list with a specific subset of players" do
       create_players(15)
 
