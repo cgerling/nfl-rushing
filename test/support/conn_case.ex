@@ -23,6 +23,7 @@ defmodule NflRushingWeb.ConnCase do
     quote do
       import Plug.Conn
       import Phoenix.ConnTest
+      import NflRushing.DataHelper
       import NflRushing.Factory
       import NflRushingWeb.ConnCase
 
