@@ -100,7 +100,7 @@ defmodule NflRushingWeb.PlayersLiveTest do
     end
 
     test "allows to sort players by total rushing yards ascending", %{conn: conn} do
-      _players = insert_list(5, :player)
+      players = insert_list(5, :player)
       {:ok, live, _} = live(conn, @players_path)
 
       _sort_players =
@@ -121,10 +121,24 @@ defmodule NflRushingWeb.PlayersLiveTest do
 
       assert ["total_rushing_yards:asc"] == Floki.attribute(selected_option, "value")
       assert "Less Yds" == Floki.text(selected_option)
+
+      expected_order =
+        players
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
+        |> Enum.sort_by(& &1.statistic.total_rushing_yards, :asc)
+        |> Enum.map(& &1.name)
+
+      actual_order =
+        total_rushing_yards_sort_fragment
+        |> Floki.find("table tbody tr td:first-child")
+        |> Enum.map(&Floki.text/1)
+
+      assert expected_order == actual_order
     end
 
     test "allows to sort players by total rushing yards descending", %{conn: conn} do
-      _players = insert_list(5, :player)
+      players = insert_list(5, :player)
       {:ok, live, _} = live(conn, @players_path)
 
       _sort_players =
@@ -145,10 +159,24 @@ defmodule NflRushingWeb.PlayersLiveTest do
 
       assert ["total_rushing_yards:desc"] == Floki.attribute(selected_option, "value")
       assert "Most Yds" == Floki.text(selected_option)
+
+      expected_order =
+        players
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
+        |> Enum.sort_by(& &1.statistic.total_rushing_yards, :desc)
+        |> Enum.map(& &1.name)
+
+      actual_order =
+        total_rushing_yards_sort_fragment
+        |> Floki.find("table tbody tr td:first-child")
+        |> Enum.map(&Floki.text/1)
+
+      assert expected_order == actual_order
     end
 
     test "allows to sort players by longest rush ascending", %{conn: conn} do
-      _players = insert_list(5, :player)
+      players = insert_list(5, :player)
       {:ok, live, _} = live(conn, @players_path)
 
       _sort_players =
@@ -169,10 +197,24 @@ defmodule NflRushingWeb.PlayersLiveTest do
 
       assert ["longest_rush:asc"] == Floki.attribute(selected_option, "value")
       assert "Less Lng" == Floki.text(selected_option)
+
+      expected_order =
+        players
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
+        |> Enum.sort_by(& &1.statistic.longest_rush, :asc)
+        |> Enum.map(& &1.name)
+
+      actual_order =
+        longest_rush_sort_fragment
+        |> Floki.find("table tbody tr td:first-child")
+        |> Enum.map(&Floki.text/1)
+
+      assert expected_order == actual_order
     end
 
     test "allows to sort players by longest rush descending", %{conn: conn} do
-      _players = insert_list(5, :player)
+      players = insert_list(5, :player)
       {:ok, live, _} = live(conn, @players_path)
 
       _sort_players =
@@ -193,10 +235,24 @@ defmodule NflRushingWeb.PlayersLiveTest do
 
       assert ["longest_rush:desc"] == Floki.attribute(selected_option, "value")
       assert "Most Lng" == Floki.text(selected_option)
+
+      expected_order =
+        players
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
+        |> Enum.sort_by(& &1.statistic.longest_rush, :desc)
+        |> Enum.map(& &1.name)
+
+      actual_order =
+        longest_rush_sort_fragment
+        |> Floki.find("table tbody tr td:first-child")
+        |> Enum.map(&Floki.text/1)
+
+      assert expected_order == actual_order
     end
 
     test "allows to sort players by total rushing touchdowns ascending", %{conn: conn} do
-      _players = insert_list(5, :player)
+      players = insert_list(5, :player)
       {:ok, live, _} = live(conn, @players_path)
 
       _sort_players =
@@ -217,10 +273,24 @@ defmodule NflRushingWeb.PlayersLiveTest do
 
       assert ["total_rushing_touchdowns:asc"] == Floki.attribute(selected_option, "value")
       assert "Less TD" == Floki.text(selected_option)
+
+      expected_order =
+        players
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
+        |> Enum.sort_by(& &1.statistic.total_rushing_touchdowns, :asc)
+        |> Enum.map(& &1.name)
+
+      actual_order =
+        total_rushing_touchdowns_sort_fragment
+        |> Floki.find("table tbody tr td:first-child")
+        |> Enum.map(&Floki.text/1)
+
+      assert expected_order == actual_order
     end
 
     test "allows to sort players by total rushing touchdowns descending", %{conn: conn} do
-      _players = insert_list(5, :player)
+      players = insert_list(5, :player)
       {:ok, live, _} = live(conn, @players_path)
 
       _sort_players =
@@ -241,6 +311,20 @@ defmodule NflRushingWeb.PlayersLiveTest do
 
       assert ["total_rushing_touchdowns:desc"] == Floki.attribute(selected_option, "value")
       assert "Most TD" == Floki.text(selected_option)
+
+      expected_order =
+        players
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
+        |> Enum.sort_by(& &1.statistic.total_rushing_touchdowns, :desc)
+        |> Enum.map(& &1.name)
+
+      actual_order =
+        total_rushing_touchdowns_sort_fragment
+        |> Floki.find("table tbody tr td:first-child")
+        |> Enum.map(&Floki.text/1)
+
+      assert expected_order == actual_order
     end
   end
 
