@@ -12,7 +12,7 @@ defmodule NflRushing.Query do
     do: offset(queryable, ^amount)
 
   @spec paginate(Queryable.t(), list) :: Queryable.t()
-  def paginate(queryable, opts \\ []) when is_list(opts) do
+  def paginate(queryable, opts) when is_list(opts) do
     page = Keyword.get(opts, :page)
     page_size = Keyword.get(opts, :page_size)
 
