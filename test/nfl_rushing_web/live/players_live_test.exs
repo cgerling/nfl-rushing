@@ -415,6 +415,82 @@ defmodule NflRushingWeb.PlayersLiveTest do
       assert previous_page_information_text =~ "Showing 1 to 30 of 50 results"
     end
 
+    test "do nothing when trying to navigate to negative pages", %{conn: conn} do
+      insert_list(5, :player)
+      {:ok, live, _} = live(conn, @players_path)
+
+      assert {:ok, first_page_fragment} =
+               live
+               |> render()
+               |> Floki.parse_fragment()
+
+      first_page_information_text =
+        first_page_fragment
+        |> Floki.find("nav div p")
+        |> List.first()
+        |> Floki.text()
+        |> trim_multiline_content()
+
+      assert first_page_information_text =~ "Showing 1 to 5 of 5 results"
+
+      _previous_page_click =
+        live
+        |> element("nav section a:first-child")
+        |> render_click()
+
+      assert {:ok, previous_page_fragment} =
+               live
+               |> render()
+               |> Floki.parse_fragment()
+
+      previous_page_information_text =
+        previous_page_fragment
+        |> Floki.find("nav div p")
+        |> List.first()
+        |> Floki.text()
+        |> trim_multiline_content()
+
+      assert previous_page_information_text =~ "Showing 1 to 5 of 5 results"
+    end
+
+    test "do nothing when trying to navigate to out of bound pages", %{conn: conn} do
+      insert_list(5, :player)
+      {:ok, live, _} = live(conn, @players_path)
+
+      assert {:ok, first_page_fragment} =
+               live
+               |> render()
+               |> Floki.parse_fragment()
+
+      first_page_information_text =
+        first_page_fragment
+        |> Floki.find("nav div p")
+        |> List.first()
+        |> Floki.text()
+        |> trim_multiline_content()
+
+      assert first_page_information_text =~ "Showing 1 to 5 of 5 results"
+
+      _next_page_click =
+        live
+        |> element("nav section a:last-child")
+        |> render_click()
+
+      assert {:ok, next_page_fragment} =
+               live
+               |> render()
+               |> Floki.parse_fragment()
+
+      next_page_information_text =
+        next_page_fragment
+        |> Floki.find("nav div p")
+        |> List.first()
+        |> Floki.text()
+        |> trim_multiline_content()
+
+      assert next_page_information_text =~ "Showing 1 to 5 of 5 results"
+    end
+
     defp trim_multiline_content(content) do
       content
       |> String.trim()
