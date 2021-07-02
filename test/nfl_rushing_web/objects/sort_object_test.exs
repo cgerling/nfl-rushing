@@ -88,7 +88,7 @@ defmodule NflRushingWeb.SortObjectTest do
     end
   end
 
-  describe "from_params/1" do
+  describe "from_params/2" do
     test "returns a ok with a struct containing the informed values when params are valid" do
       field = "field"
       direction = :asc
@@ -119,6 +119,23 @@ defmodule NflRushingWeb.SortObjectTest do
 
       assert %Changeset{valid?: false} = changeset
       assert errors_on(changeset) == %{sort: ["has invalid format"]}
+    end
+
+    test "returns an error with an invalid changeset when field is not allowed" do
+      allowed_fields = [:field]
+      not_allowed_field_sort = "not_allowed:asc"
+      not_allowed_field_params = %{sort: not_allowed_field_sort}
+
+      changeset =
+        SortObject.changeset(%SortObject{}, not_allowed_field_params,
+          allowed_fields: allowed_fields
+        )
+
+      assert %Changeset{valid?: false} = changeset
+
+      assert changeset.errors == [
+               field: {"is invalid", [validation: :inclusion, enum: ["field"]]}
+             ]
     end
   end
 

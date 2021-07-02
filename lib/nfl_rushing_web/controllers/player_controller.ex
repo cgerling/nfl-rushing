@@ -10,7 +10,7 @@ defmodule NflRushingWeb.PlayerController do
   def index(conn, params) do
     with {:ok, %ListPlayersObject{} = list_players_object} <-
            ListPlayersObject.from_params(params) do
-      players = League.list_players(list_players_object)
+      %{entries: players} = League.list_players(list_players_object)
 
       conn
       |> put_status(:ok)

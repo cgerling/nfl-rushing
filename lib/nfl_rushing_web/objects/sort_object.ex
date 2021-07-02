@@ -18,7 +18,7 @@ defmodule NflRushingWeb.SortObject do
     field :sort, :string, virtual: true
   end
 
-  @spec changeset(%__MODULE__{}, map, list) :: Changeset.t()
+  @spec changeset(%__MODULE__{}, map, Keyword.t()) :: Changeset.t()
   def changeset(%__MODULE__{} = struct, %{} = params, opts \\ []) do
     allowed_fields = Keyword.get(opts, :allowed_fields, [])
 
@@ -85,10 +85,10 @@ defmodule NflRushingWeb.SortObject do
 
   defp put_field_as_atom(%Changeset{} = changeset), do: changeset
 
-  @spec from_params(map) :: {:ok, t()} | {:error, Changeset.t()}
-  def from_params(params) do
+  @spec from_params(map, Keyword.t()) :: {:ok, t()} | {:error, Changeset.t()}
+  def from_params(params, opts \\ []) do
     %__MODULE__{}
-    |> changeset(params)
+    |> changeset(params, opts)
     |> apply_action(:parse)
   end
 
