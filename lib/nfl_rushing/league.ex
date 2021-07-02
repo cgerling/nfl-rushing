@@ -21,6 +21,7 @@ defmodule NflRushing.League do
       |> Query.join_with(:statistic)
       |> Query.sort_by(sort_field, sort_direction, of: :statistic)
       |> Query.sort_by(:inserted_at, :desc)
+      |> Query.sort_by(:id, :asc)
       |> Repo.paginate(page: page.page, page_size: page.page_size)
 
     players = Repo.preload(entries, [:statistic, :team])

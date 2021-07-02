@@ -14,6 +14,10 @@ defmodule NflRushingWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :file do
+    plug :accepts, ["csv", "json"]
+  end
+
   scope "/", NflRushingWeb do
     pipe_through :browser
 
@@ -23,7 +27,12 @@ defmodule NflRushingWeb.Router do
   scope "/api", NflRushingWeb do
     pipe_through :api
 
-    resources "/players", PlayerController, only: [:index]
     resources "/health", HealthController, only: [:index]
+  end
+
+  scope "/api", NflRushingWeb do
+    pipe_through :file
+
+    resources "/players", PlayerController, only: [:index]
   end
 end

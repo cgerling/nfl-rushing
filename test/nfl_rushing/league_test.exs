@@ -15,12 +15,15 @@ defmodule NflRushing.LeagueTest do
     }
 
     test "returns a map with a total count and a list with a subset of all existing players" do
-      players = create_players(20)
+      players =
+        20
+        |> insert_list(:player)
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
 
       assert %{count: count, entries: fetched_players} = League.list_players(@params)
 
       assert count == 20
-
       assert Enum.count(fetched_players) == 10
 
       assert Enum.all?(fetched_players, fn fetched_player ->
@@ -29,17 +32,39 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a map with a total count and a list with a subset of all players sorted by the newest to the oldest" do
-      create_players(20)
+      players =
+        20
+        |> insert_list(:player)
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
 
       assert %{entries: fetched_players} = League.list_players(@params)
 
-      sorted_fetched_players = Enum.sort_by(fetched_players, & &1.inserted_at, :desc)
+      expected_players = Enum.take(players, 10)
 
-      assert sorted_fetched_players == fetched_players
+      assert expected_players == fetched_players
+    end
+
+    test "returns a map with a total count and a list with a subset of all players sorted by the newest to the oldest and id" do
+      now = NaiveDateTime.utc_now()
+
+      players =
+        5
+        |> insert_list(:player, inserted_at: now)
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
+
+      assert %{entries: fetched_players} = League.list_players(@params)
+
+      assert players == fetched_players
     end
 
     test "returns a map with a total count and a list with a specific subset of players" do
-      create_players(15)
+      _players =
+        15
+        |> insert_list(:player)
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
 
       params = put_in(@params.page.page, 2)
       assert %{count: count, entries: fetched_players} = League.list_players(params)
@@ -49,7 +74,11 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a map with a total count and a list with a subset of players with custom size" do
-      create_players(20)
+      _players =
+        20
+        |> insert_list(:player)
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
 
       params = put_in(@params.page.page_size, 15)
       assert %{count: count, entries: fetched_players} = League.list_players(params)
@@ -59,7 +88,11 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a map with a total count and list of players with statistic and team information" do
-      create_players(10)
+      _players =
+        10
+        |> insert_list(:player)
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
 
       assert %{count: count, entries: fetched_players} = League.list_players(@params)
 
@@ -69,7 +102,12 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a map with a total count and a list of players which name contains the given query string" do
-      create_players(15)
+      _players =
+        15
+        |> insert_list(:player)
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
+
       name = Faker.Person.name()
       named_player = insert(:player, name: name)
 
@@ -84,15 +122,18 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a map with a total count and a list of players sorted by a given player statistic field and order" do
-      create_players(15)
+      players =
+        10
+        |> insert_list(:player)
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
+        |> Enum.sort_by(& &1.statistic.id, :desc)
 
       sort = %{field: :id, direction: :desc}
       params = put_in(@params.sort, sort)
       assert %{entries: fetched_players} = League.list_players(params)
 
-      sorted_players = Enum.sort_by(fetched_players, & &1.statistic.id, :desc)
-
-      assert fetched_players == sorted_players
+      assert players == fetched_players
     end
 
     test "returns a map with a total count as zero and an empty list when there is no players saved" do
@@ -111,10 +152,12 @@ defmodule NflRushing.LeagueTest do
     }
 
     test "returns a subset of all existing players" do
-      players = create_players(15)
+      players = insert_list(15, :player)
 
       csv =
         players
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
         |> Enum.take(10)
         |> build_csv()
 
@@ -122,10 +165,12 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a subset of all players sorted by the newest to the oldest" do
-      players = create_players(15)
+      players = insert_list(15, :player)
 
       csv =
         players
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
         |> Enum.take(10)
         |> build_csv()
 
@@ -133,10 +178,12 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a specific subset of players" do
-      players = create_players(15)
+      players = insert_list(15, :player)
 
       csv =
         players
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
         |> Enum.drop(10)
         |> build_csv()
 
@@ -146,9 +193,13 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a subset of players with custom size" do
-      players = create_players(15)
+      players = insert_list(15, :player)
 
-      csv = build_csv(players)
+      csv =
+        players
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
+        |> build_csv()
 
       params = put_in(@params.page.page_size, 20)
 
@@ -156,8 +207,7 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a list with players which name contains the given query" do
-      create_players(15)
-
+      _players = insert_list(15, :player)
       name = Faker.Person.name()
       named_player = insert(:player, name: name)
 
@@ -169,10 +219,12 @@ defmodule NflRushing.LeagueTest do
     end
 
     test "returns a list with players sorted by a given player statistic field and order" do
-      players = create_players(15)
+      players = insert_list(15, :player)
 
       csv =
         players
+        |> Enum.sort_by(& &1.id, :asc)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime})
         |> Enum.sort_by(& &1.statistic.id, :asc)
         |> Enum.take(10)
         |> build_csv()
@@ -188,48 +240,6 @@ defmodule NflRushing.LeagueTest do
 
       assert csv == League.export_players(@params)
     end
-  end
-
-  defp build_csv(players) when is_list(players) do
-    headers =
-      "name,position,abbreviation,average_rushing_attempts_per_game,average_rushing_yards_per_attempt,longest_rush,rushing_attempts,rushing_first_downs,rushing_first_downs_percentage,rushing_fourty_yards_each,rushing_fumbles,rushing_twenty_yards_each,rushing_yards_per_game,total_rushing_touchdowns,total_rushing_yards"
-
-    entries = convert_to_csv_entries(players)
-
-    "#{headers}\r\n#{entries}"
-  end
-
-  defp convert_to_csv_entries([]), do: ""
-
-  defp convert_to_csv_entries(players) do
-    entries =
-      players
-      |> Enum.map(fn player ->
-        %{team: team, statistic: statistic} = player
-
-        entry = [
-          player.name,
-          player.position,
-          team.abbreviation,
-          statistic.average_rushing_attempts_per_game,
-          statistic.average_rushing_yards_per_attempt,
-          statistic.longest_rush,
-          statistic.rushing_attempts,
-          statistic.rushing_first_downs,
-          statistic.rushing_first_downs_percentage,
-          statistic.rushing_fourty_yards_each,
-          statistic.rushing_fumbles,
-          statistic.rushing_twenty_yards_each,
-          statistic.rushing_yards_per_game,
-          statistic.total_rushing_touchdowns,
-          statistic.total_rushing_yards
-        ]
-
-        Enum.join(entry, ",")
-      end)
-      |> Enum.join("\r\n")
-
-    "#{entries}\r\n"
   end
 
   describe "import_team/1" do
@@ -358,13 +368,5 @@ defmodule NflRushing.LeagueTest do
                }
              }
     end
-  end
-
-  defp create_players(amount) when is_integer(amount) do
-    now = NaiveDateTime.utc_now()
-
-    1..amount
-    |> Enum.map(&NaiveDateTime.add(now, -&1, :second))
-    |> Enum.map(&insert(:player, inserted_at: &1))
   end
 end

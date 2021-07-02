@@ -423,4 +423,23 @@ defmodule NflRushingWeb.PlayersLiveTest do
       |> Enum.join(" ")
     end
   end
+
+  describe "export" do
+    test "shows export button", %{conn: conn} do
+      {:ok, live, _} = live(conn, @players_path)
+
+      {:ok, live_fragment} =
+        live
+        |> render()
+        |> Floki.parse_fragment()
+
+      csv_download_path =
+        Routes.player_path(conn, :index, page: 1, page_size: 30, q: nil, sort: nil)
+
+      assert [export_button] = Floki.find(live_fragment, "a#export")
+      assert [csv_download_path] == Floki.attribute(export_button, "href")
+      assert ["_blank"] == Floki.attribute(export_button, "target")
+      assert ["Export to CSV"] == Floki.attribute(export_button, "title")
+    end
+  end
 end
