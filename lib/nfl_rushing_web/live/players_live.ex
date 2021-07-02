@@ -112,6 +112,17 @@ defmodule NflRushingWeb.PlayersLive do
     end
   end
 
+  defp csv_download_path(page, search, sort) do
+    params = %{
+      page: page.page,
+      page_size: page.page_size,
+      q: search.q,
+      sort: sort.sort
+    }
+
+    Routes.player_path(NflRushingWeb.Endpoint, :index, params)
+  end
+
   defp sort_options,
     do: [
       %{name: "Newest to oldest", value: "", default?: true},
