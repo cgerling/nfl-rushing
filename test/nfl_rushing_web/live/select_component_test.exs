@@ -12,25 +12,30 @@ defmodule NflRushingWeb.SelectComponentTest do
         %{name: "Option 2", value: "option-2"}
       ]
 
-      select_component =
-        render_component(SelectComponent, name: "test", options: options, value: "")
+      assert {:ok, select_component} =
+               SelectComponent
+               |> render_component(name: "test", options: options, value: "")
+               |> Floki.parse_fragment()
 
-      expected_html =
-        ~s{<select name="test" class="border-1 font-medium form-select rounded-md text-gray-900">\n  \n    <option value="option-1" >Option 1</option>\n  \n    <option value="option-2" >Option 2</option>\n  \n</select>\n}
+      assert [select_element] = Floki.find(select_component, "select[name=test]")
+      assert [option_1, option_2] = Floki.children(select_element)
 
-      assert select_component == expected_html
+      assert ["option-1"] == Floki.attribute(option_1, "value")
+      assert "Option 1" == Floki.text(option_1)
+      assert ["option-2"] == Floki.attribute(option_2, "value")
+      assert "Option 2" == Floki.text(option_2)
     end
 
     test "renders a select tag without options when options are not informed" do
       options = []
 
-      select_component =
-        render_component(SelectComponent, name: "test", options: options, value: "")
+      {:ok, select_component} =
+        SelectComponent
+        |> render_component(name: "test", options: options, value: "")
+        |> Floki.parse_fragment()
 
-      expected_html =
-        ~s{<select name=\"test\" class=\"border-1 font-medium form-select rounded-md text-gray-900\">\n  \n</select>\n}
-
-      assert select_component == expected_html
+      assert [select_element] = Floki.find(select_component, "select[name=test]")
+      assert [] == Floki.children(select_element)
     end
 
     test "renders a select tag with the default option selected when value is a empty string" do
@@ -39,13 +44,16 @@ defmodule NflRushingWeb.SelectComponentTest do
         %{name: "Option 2", value: "option-2"}
       ]
 
-      select_component =
-        render_component(SelectComponent, name: "test", options: options, value: "")
+      {:ok, select_component} =
+        SelectComponent
+        |> render_component(name: "test", options: options, value: "")
+        |> Floki.parse_fragment()
 
-      expected_html =
-        ~s{<select name="test" class="border-1 font-medium form-select rounded-md text-gray-900">\n  \n    <option value="option-1" selected>Option 1</option>\n  \n    <option value="option-2" >Option 2</option>\n  \n</select>\n}
+      assert [select_element] = Floki.find(select_component, "select[name=test]")
+      assert [option_1, option_2] = Floki.children(select_element)
 
-      assert select_component == expected_html
+      assert ["selected"] == Floki.attribute(option_1, "selected")
+      assert [] == Floki.attribute(option_2, "selected")
     end
 
     test "renders a select tag with the default option selected when value is nil" do
@@ -54,13 +62,16 @@ defmodule NflRushingWeb.SelectComponentTest do
         %{name: "Option 2", value: "option-2"}
       ]
 
-      select_component =
-        render_component(SelectComponent, name: "test", options: options, value: nil)
+      {:ok, select_component} =
+        SelectComponent
+        |> render_component(name: "test", options: options, value: nil)
+        |> Floki.parse_fragment()
 
-      expected_html =
-        ~s{<select name="test" class="border-1 font-medium form-select rounded-md text-gray-900">\n  \n    <option value="option-1" selected>Option 1</option>\n  \n    <option value="option-2" >Option 2</option>\n  \n</select>\n}
+      assert [select_element] = Floki.find(select_component, "select[name=test]")
+      assert [option_1, option_2] = Floki.children(select_element)
 
-      assert select_component == expected_html
+      assert ["selected"] == Floki.attribute(option_1, "selected")
+      assert [] == Floki.attribute(option_2, "selected")
     end
 
     test "renders a select tag with a custom option selected when value is not empty" do
@@ -69,13 +80,16 @@ defmodule NflRushingWeb.SelectComponentTest do
         %{name: "Option 2", value: "option-2"}
       ]
 
-      select_component =
-        render_component(SelectComponent, name: "test", options: options, value: "option-2")
+      {:ok, select_component} =
+        SelectComponent
+        |> render_component(name: "test", options: options, value: "option-2")
+        |> Floki.parse_fragment()
 
-      expected_html =
-        ~s{<select name="test" class="border-1 font-medium form-select rounded-md text-gray-900">\n  \n    <option value="option-1" >Option 1</option>\n  \n    <option value="option-2" selected>Option 2</option>\n  \n</select>\n}
+      assert [select_element] = Floki.find(select_component, "select[name=test]")
+      assert [option_1, option_2] = Floki.children(select_element)
 
-      assert select_component == expected_html
+      assert [] == Floki.attribute(option_1, "selected")
+      assert ["selected"] == Floki.attribute(option_2, "selected")
     end
   end
 end
