@@ -1,6 +1,7 @@
 import Config
 
 config :nfl_rushing, NflRushingWeb.Endpoint,
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  server: true
 
 config :nfl_rushing, NflRushing.Repo, ssl: true
