@@ -1,5 +1,16 @@
 version: "3"
 services:
+  server:
+    build: .
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@database:5432/nfl_rushing_dev
+      HOSTNAME: localhost
+      SECRET_KEY_BASE: ls8gYfuiRzXwbPw+k/1QPHVLyqm8xg+bPfHVE8s6s8PnkYqkDbzIgVw9cPMfbKM7
+    ports:
+      - 4000:4000
+
   database:
     image: postgres:13.3
     environment:
