@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :nfl_rushing,
   ecto_repos: [NflRushing.Repo],
