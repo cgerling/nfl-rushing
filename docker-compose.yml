@@ -6,8 +6,4 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - 5432:5432
-    volumes:
-      - nfl-rushing-data:/var/lib/postgresql/data
 
-volumes:
-  nfl-rushing-data:
