@@ -42,4 +42,6 @@ COPY --from=build --chown=nobody:nobody $APP_DIR/_build/prod/rel/nfl_rushing ./
 
 ENV HOME=$APP_DIR
 
-CMD ["bin/nfl_rushing", "start"]
+CMD bin/nfl_rushing eval "Elixir.NflRushing.ReleaseTasks.setup()" && \
+  trap 'exit' INT ; \
+  exec bin/nfl_rushing start
