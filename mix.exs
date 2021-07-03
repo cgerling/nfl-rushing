@@ -11,6 +11,7 @@ defmodule NflRushing.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      releases: releases(),
       dialyzer: [
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ]
@@ -55,6 +56,16 @@ defmodule NflRushing.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+    ]
+  end
+
+  defp releases do
+    [
+      nfl_rushing: [
+        include_erts: true,
+        include_executables_for: [:unix],
+        applications: [runtime_tools: :permanent]
+      ]
     ]
   end
 end
