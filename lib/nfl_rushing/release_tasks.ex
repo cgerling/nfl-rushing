@@ -10,6 +10,7 @@ defmodule NflRushing.ReleaseTasks do
 
   alias Ecto.Adapters.Postgres
   alias Ecto.Migrator
+  alias NflRushing.Importer
   alias NflRushing.Repo
 
   require Logger
@@ -63,5 +64,32 @@ defmodule NflRushing.ReleaseTasks do
     migrations_path = Migrator.migrations_path(Repo)
 
     Migrator.run(Repo, migrations_path, :up, all: true, log: :debug)
+  end
+
+  @spec run_importer() :: no_return()
+  def run_importer do
+    setup()
+
+    Logger.info("=> Running Imports")
+    import_data()
+  end
+
+  defp import_data do
+    priv_dir = priv_dir_for(@otp_app)
+    import_file = Path.join([priv_dir, "importer", "rushing.json"])
+
+    if File.exists?(import_file) do
+      Logger.info("=> Running Imports")
+      Importer.import_rushing_data(import_file)
+      Logger.info("=> Completed Imports")
+    else
+      Logger.warn("=> Skipping imports - #{import_file} does not exists")
+    end
+  end
+
+  defp priv_dir_for(application) do
+    application
+    |> :code.priv_dir()
+    |> to_string()
   end
 end
