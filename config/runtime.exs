@@ -18,9 +18,19 @@ secret_key_base =
     You can generate one by calling: mix phx.gen.secret
     """
 
+hostname =
+  System.get_env("HOSTNAME") ||
+    raise """
+    environment variable HOSTNAME is missing.
+    For example: example.com
+    """
+
+port = String.to_integer(System.get_env("PORT") || "4000")
+
 config :nfl_rushing, NflRushingWeb.Endpoint,
   http: [
-    port: String.to_integer(System.get_env("PORT") || "4000"),
+    port: port,
     transport_options: [socket_opts: [:inet6]]
   ],
-  secret_key_base: secret_key_base
+  secret_key_base: secret_key_base,
+  url: [host: hostname, port: port]
