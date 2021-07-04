@@ -1,4 +1,5 @@
 defmodule NflRushing.ReleaseTasks do
+  @dialyzer {:nowarn_function, import_data: 0, priv_dir_for: 1}
   @otp_app_dependencies [
     :crypto,
     :ssl,
