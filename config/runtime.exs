@@ -8,7 +8,7 @@ if config_env() == :prod do
       For example: ecto://USER:PASS@HOST/DATABASE
       """
 
-  database_ssl = (System.get_env("DATABASE_URL") || "false") == "true"
+  database_ssl = (System.get_env("DATABASE_SSL") || "false") == "true"
 
   config :nfl_rushing, NflRushing.Repo,
     url: database_url,
