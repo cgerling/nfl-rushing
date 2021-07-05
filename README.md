@@ -11,6 +11,8 @@ You can run the whole application through Docker Compose using the command below
 docker compose up -d
 ```
 
+You can visit [localhost:4000](http://localhost:4000) from your browser to interact with the application.
+
 ### Imports
 
 You will need to run the imports in order to have any data available in the application. For now, you can do so with the command below.
