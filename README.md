@@ -1,7 +1,8 @@
 # NFL Rushing
 [![ci](https://github.com/cgerling/nfl-rushing/actions/workflows/ci.yml/badge.svg)](https://github.com/cgerling/nfl-rushing/actions/workflows/ci.yml)
 
-A Phoenix LiveView application to visualize rushing statistics of NFL Players.
+A Phoenix LiveView application to visualize rushing statistics of NFL Players. 
+You can check this project running live at [nfl-rushing-22060.herokuapp.com](https://nfl-rushing-22060.herokuapp.com/)
 
 ## Setting up
 
